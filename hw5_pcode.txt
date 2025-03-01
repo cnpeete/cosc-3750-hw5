@@ -1,0 +1,74 @@
+/*
+hw5_pcode.txt
+Author: Cameron Peete
+Date: February 28, 2025
+
+COSC 3750, Homework 5 Pseudocode
+
+This file contains pseudocode for Homework 5	
+*/
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
+#include <locale.h>
+#include <langinfo.h>
+#include <stdio.h>
+#include <stdint.h>
+
+struct dirent *dp;
+struct stat statubuf;
+struct passwd *pwd;
+struct group *grp;
+struct tm *tm;
+char date[256];
+
+create a function:
+void printOutput(string input, bool nFlag, bool hFlag)
+{
+  If input is not a valid directory
+    do nothing
+  else
+    This will accept the filename and print out
+    the regular ls -l output if no options are
+    selected
+}
+
+int main(int argc, char**argv)
+{
+  int count;
+
+  if (argc == 1):
+    list the current directories entries (like ls -l)
+
+  else
+    count = 1;
+    while(count < argc):
+
+      Read in the user's entries
+      if the second or third arguments contain:
+        "-n",-"h", "-n -h", "-nh" or "-hn"
+        set nFlag or hFlag true appropriately
+       
+        if (nFlag && hFlag && argc == 3)
+          call the printOutputOptionsOnly() function
+          break;
+
+        else if (nFlag && hFlag)
+          call the printOutput function and pass it (argv[count+2], nFlag, hFlag)
+          count = count + 3;
+  
+        else if(nFlag)
+        call the printOutput function and pass it (argv[count+1], nFlag, hFlag)
+        count = count + 2;
+
+        else if (hFlag)
+        call the printOutput function and pass it (argv[count+1], nFlag, hFlag)
+        count = count + 2;
+
+      else
+  
+  return 0;      
+}     
