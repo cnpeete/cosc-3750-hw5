@@ -46,17 +46,61 @@ int main(int argc, char **argv)
   }
   else
   {
-    if (strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "-n -h") == 0 || strcmp(argv[1], "-nh") == 0 ||
-        strcmp(argv[2], "-n") == 0 || strcmp(argv[2], "-n -h") == 0 || strcmp(argv[2], "-nh") == 0)
+    //only check argv[1] if it exists
+    if (argc > 1)
     {
-      nFlag = true;
-      printf("nFlag: %d\n", nFlag);
+      if (strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "-n -h") == 0 ||
+          strcmp(argv[1], "-nh") == 0 || strcmp(argv[1], "-hn") == 0)
+      {
+        nFlag = true;
+        printf("nFlag: %d\n", nFlag);
+      }
+      if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-h -n") == 0 ||
+          strcmp(argv[1], "-hn") == 0 || strcmp(argv[1], "-nh") == 0)
+      {
+        hFlag = true;
+        printf("hFlag: %d\n", hFlag);
+      }
+      //if the first argument triggers neither of thse flags, then maybe we should do the while loop
+      //and call printOutput()
+      if (!nFlag && !hFlag)
+      {
+        count = 1;
+        while (count < argc)
+        {
+          printOutput(argv[count], nFlag, hFlag);
+          count = count+1;
+        }
+      }
     }
-    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-h -n") == 0 || strcmp(argv[1], "-hn") == 0 ||
-        strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "-h -n") == 0 || strcmp(argv[2], "-hn") == 0)
+    //we only want to check the 2nd item for a flag if the first entry did not set one of the flags
+    //otherwise we want to call printOutput function
+    if (nFlag || hFlag)
     {
-      hFlag = true;
-      printf("hFlag: %d\n", hFlag);
+      //only check argv[2] if it exists
+      if (argc > 2)
+      {
+        if (strcmp(argv[2], "-n") == 0 || strcmp(argv[2], "-n -h") == 0 ||
+            strcmp(argv[2], "-nh") == 0 || strcmp(argv[2], "-hn") == 0)
+        {
+          nFlag = true;
+          printf("nFlag: %d\n", nFlag);
+        }
+        if (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "-h -n") == 0 ||
+            strcmp(argv[2], "-hn") == 0 || strcmp(argv[2], "-nh") == 0)
+        {
+          hFlag = true;
+          printf("hFlag: %d\n", hFlag);
+        }
+        //put the while loop here since we have evaluated for both flags
+        //we know nFlag or hFlag are true
+        //call the printOutput() function and pass it the values
+        if (nFlag && hFlag)
+        {
+          count = 3; //have to account for both flags being set
+          //while (count < argc)
+        }
+      }
     }
   }
 
@@ -65,7 +109,8 @@ int main(int argc, char **argv)
 
 void printOutput(char *input, bool nFlag, bool hFlag)
 {
-    DIR *dir = opendir("."); 
+    DIR *dir = opendir("input");
+
     while ((dp=readdir(dir)) != NULL)
     {
       //if stat returns an error skip it
