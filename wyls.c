@@ -44,6 +44,22 @@ int main(int argc, char **argv)
   {
     printOutput(argv[0], nFlag, hFlag);
   }
+  else
+  {
+    if (strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "-n -h") == 0 || strcmp(argv[1], "-nh") == 0 ||
+        strcmp(argv[2], "-n") == 0 || strcmp(argv[2], "-n -h") == 0 || strcmp(argv[2], "-nh") == 0)
+    {
+      nFlag = true;
+      printf("nFlag: %d\n", nFlag);
+    }
+    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-h -n") == 0 || strcmp(argv[1], "-hn") == 0 ||
+        strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "-h -n") == 0 || strcmp(argv[2], "-hn") == 0)
+    {
+      hFlag = true;
+      printf("hFlag: %d\n", hFlag);
+    }
+  }
+
   return 0;
 }
 
@@ -52,7 +68,12 @@ void printOutput(char *input, bool nFlag, bool hFlag)
     DIR *dir = opendir("."); 
     while ((dp=readdir(dir)) != NULL)
     {
+      //if stat returns an error skip it
       if (stat(dp->d_name, &statbuf) == -1) continue;
+
+      //if the directory name is '.' or '..' skip it
+      if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) continue;
+
       printf("%10.10s", perms(statbuf.st_mode));
 
       if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
@@ -74,7 +95,7 @@ void printOutput(char *input, bool nFlag, bool hFlag)
       printf(" %9jd", (intmax_t)statbuf.st_size);
       
       tm = localtime(&statbuf.st_mtime);
-      strftime(date, sizeof(date), nl_langinfo(D_T_FMT), tm);
+      strftime(date, 256, nl_langinfo(D_T_FMT), tm);
       printf(" %s %s\n", date, dp->d_name);
     }
 }
