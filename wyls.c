@@ -42,11 +42,8 @@ int main(int argc, char **argv)
 
   if (argc == 1)
   {
-    printf("argv: %s\n",argv[0]);
     printOutput(argv[0], nFlag, hFlag);
   }
-
-  printf("\nHello, World!\n");
   return 0;
 }
 
@@ -55,8 +52,30 @@ void printOutput(char *input, bool nFlag, bool hFlag)
     DIR *dir = opendir("."); 
     while ((dp=readdir(dir)) != NULL)
     {
+      if (stat(dp->d_name, &statbuf) == -1) continue;
       printf("%10.10s", perms(statbuf.st_mode));
-      printf("%4ld",statbuf.st_nlink);
+
+      if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+      {
+        printf(" %-8.8s", pwd->pw_name);
+      }
+      else
+      {
+        printf(" %-8d", statbuf.st_uid);
+      }
+      if ((grp = getgrgid(statbuf.st_gid)) != NULL)
+      {
+        printf(" %8.8s", grp->gr_name);
+      }
+      else
+      {
+        printf(" %-8d", statbuf.st_gid);
+      }
+      printf(" %9jd", (intmax_t)statbuf.st_size);
+      
+      tm = localtime(&statbuf.st_mtime);
+      strftime(date, sizeof(date), nl_langinfo(D_T_FMT), tm);
+      printf(" %s %s\n", date, dp->d_name);
     }
 }
 
