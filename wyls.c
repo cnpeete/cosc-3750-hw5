@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 void printOutput(char *input, bool nFlag, bool hFlag)
 {
     //if the stat function errors
-    if (stat(input, &statbuf) == 1)
+    if (stat(input, &statbuf) != 0)
     {
       perror("error");
       return;
@@ -118,21 +118,22 @@ void printOutput(char *input, bool nFlag, bool hFlag)
 
     if (S_ISDIR(statbuf.st_mode))
     {
-      DIR *dir = opendir("input");
+      DIR *dir = opendir(input);
       if (dir == NULL)
       {
-        perror("error");
+        perror("\nerror");
       }
       else
       {
         while ((dp=readdir(dir)) != NULL)
         {
-          //if stat returns an error skip it
-          if (stat(dp->d_name, &statbuf) == -1) continue;
-
           //if the directory name is '.' or '..' skip it
           if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) continue;
 
+          char path[1024];
+          snprintf(path, 1024, "%s%s", input, dp->d_name);
+
+          //if (stat(path, &statbuf) == -1) perror("\nerror");
           printf("%10.10s", perms(statbuf.st_mode));
 
           if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
