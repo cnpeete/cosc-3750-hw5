@@ -109,39 +109,55 @@ int main(int argc, char **argv)
 
 void printOutput(char *input, bool nFlag, bool hFlag)
 {
-    DIR *dir = opendir("input");
-
-    while ((dp=readdir(dir)) != NULL)
+    //if the stat function errors
+    if (stat(input, &statbuf) == 1)
     {
-      //if stat returns an error skip it
-      if (stat(dp->d_name, &statbuf) == -1) continue;
+      perror("error");
+      return;
+    }
 
-      //if the directory name is '.' or '..' skip it
-      if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) continue;
-
-      printf("%10.10s", perms(statbuf.st_mode));
-
-      if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+    if (S_ISDIR(statbuf.st_mode))
+    {
+      DIR *dir = opendir("input");
+      if (dir == NULL)
       {
-        printf(" %-8.8s", pwd->pw_name);
+        perror("error");
       }
       else
       {
-        printf(" %-8d", statbuf.st_uid);
+        while ((dp=readdir(dir)) != NULL)
+        {
+          //if stat returns an error skip it
+          if (stat(dp->d_name, &statbuf) == -1) continue;
+
+          //if the directory name is '.' or '..' skip it
+          if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) continue;
+
+          printf("%10.10s", perms(statbuf.st_mode));
+
+          if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+          {
+            printf(" %-8.8s", pwd->pw_name);
+          }
+          else
+          {
+            printf(" %-8d", statbuf.st_uid);
+          }
+          if ((grp = getgrgid(statbuf.st_gid)) != NULL)
+          {
+            printf(" %8.8s", grp->gr_name);
+          }
+          else
+          {
+            printf(" %-8d", statbuf.st_gid);
+          }
+          printf(" %9jd", (intmax_t)statbuf.st_size);
+
+          tm = localtime(&statbuf.st_mtime);
+          strftime(date, 256, nl_langinfo(D_T_FMT), tm);
+          printf(" %s %s\n", date, dp->d_name);
+        }
       }
-      if ((grp = getgrgid(statbuf.st_gid)) != NULL)
-      {
-        printf(" %8.8s", grp->gr_name);
-      }
-      else
-      {
-        printf(" %-8d", statbuf.st_gid);
-      }
-      printf(" %9jd", (intmax_t)statbuf.st_size);
-      
-      tm = localtime(&statbuf.st_mtime);
-      strftime(date, 256, nl_langinfo(D_T_FMT), tm);
-      printf(" %s %s\n", date, dp->d_name);
     }
 }
 
