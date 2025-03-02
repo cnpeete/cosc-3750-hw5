@@ -139,7 +139,7 @@ int main(int argc, char **argv)
        }
       }
 
-      if (nFlag || hFlag && argc == 2)
+      if ((nFlag || hFlag) && argc == 2)
       {
         printOutput(".",nFlag,hFlag);
       }
