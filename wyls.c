@@ -1,7 +1,7 @@
 /*
 wyls.c
 Author: Cameron Peete
-Date: February 29, 2025
+Date: March 1, 2025
 
 COSC 3750, Homework 5 Program
 
@@ -101,21 +101,28 @@ void printOutput(char *input, bool nFlag, bool hFlag)
           if (stat(path, &statbuf) == -1) perror("\nerror");
           printf("%10.10s", perms(statbuf.st_mode));
 
-          if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+          if(nFlag)
           {
-            printf(" %-8.8s", pwd->pw_name);
+            printf(" %-8d %-8d",statbuf.st_uid,statbuf.st_gid);
           }
           else
           {
-            printf(" %-8d", statbuf.st_uid);
-          }
-          if ((grp = getgrgid(statbuf.st_gid)) != NULL)
-          {
-            printf(" %8.8s", grp->gr_name);
-          }
-          else
-          {
-            printf(" %-8d", statbuf.st_gid);
+            if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+            {
+              printf(" %-8.8s", pwd->pw_name);
+            }
+            else
+            {
+              printf(" %-8d", statbuf.st_uid);
+            }
+            if ((grp = getgrgid(statbuf.st_gid)) != NULL)
+            {
+              printf(" %8.8s", grp->gr_name);
+            }
+            else
+            {
+              printf(" %-8d", statbuf.st_gid);
+            }
           }
           printf(" %9jd", (intmax_t)statbuf.st_size);
 
@@ -130,21 +137,28 @@ void printOutput(char *input, bool nFlag, bool hFlag)
     {
       printf("%10.10s", perms(statbuf.st_mode));
 
-      if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+      if(nFlag)
       {
-        printf(" %-8.8s", pwd->pw_name);
+        printf(" %-8d %-8d", statbuf.st_uid, statbuf.st_gid);
       }
       else
       {
-        printf(" %-8d", statbuf.st_uid);
-      }
-      if ((grp = getgrgid(statbuf.st_gid)) != NULL)
-      {
-        printf(" %8.8s", grp->gr_name);
-      }
-      else
-      {
-        printf(" %-8d", statbuf.st_gid);
+        if ((pwd = getpwuid(statbuf.st_uid)) != NULL)
+        {
+          printf(" %-8.8s", pwd->pw_name);
+        }
+        else
+        {
+          printf(" %-8d", statbuf.st_uid);
+        }
+        if ((grp = getgrgid(statbuf.st_gid)) != NULL)
+        {
+          printf(" %8.8s", grp->gr_name);
+        }
+        else
+        {
+          printf(" %-8d", statbuf.st_gid);
+        }
       }
       printf(" %9jd", (intmax_t)statbuf.st_size);
 

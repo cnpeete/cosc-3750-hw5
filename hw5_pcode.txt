@@ -1,39 +1,53 @@
 /*
 hw5_pcode.txt
 Author: Cameron Peete
-Date: February 28, 2025
+Date: March 1, 2025
 
 COSC 3750, Homework 5 Pseudocode
 
 This file contains pseudocode for Homework 5	
 */
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <pwd.h>
-#include <grp.h>
-#include <time.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <stdio.h>
-#include <stdint.h>
 
-struct dirent *dp;
-struct stat statubuf;
-struct passwd *pwd;
-struct group *grp;
-struct tm *tm;
-char date[256];
+
+/*
+this pseudocode is wildy different than what I ended up doing.
+another note: I did not fully implement the correct time/date 
+requirements as well as the -h flag requirements. I am still
+working through them but I want to get something turned in.
+*/
+
+
 
 create a function:
 void printOutput(string input, bool nFlag, bool hFlag)
 {
-  If input is not a valid directory
+  if input is not a valid entry
     do nothing
   else
     This will accept the filename and print out
     the regular ls -l output if no options are
     selected
+    if (nFlag && hFlag)
+    {
+      print output accordingly
+    }
+    else if (nFlag)
+    {
+      print output accoridngly
+    }
+    else if (hFlag)
+    {
+      print output accoridngly
+    }
+}
+
+create another function:
+void printOutputOptionsOnly()
+{
+  This function will print the output if
+  both options are selected and argc only equals 3
+  which would mean the only arguments given to argv[]
+  would be 1) file, 2) 1st option, 3) 2nd option
 }
 
 int main(int argc, char**argv)
@@ -51,7 +65,7 @@ int main(int argc, char**argv)
       if the second or third arguments contain:
         "-n",-"h", "-n -h", "-nh" or "-hn"
         set nFlag or hFlag true appropriately
-       
+
         if (nFlag && hFlag && argc == 3)
           call the printOutputOptionsOnly() function
           break;
@@ -59,7 +73,7 @@ int main(int argc, char**argv)
         else if (nFlag && hFlag)
           call the printOutput function and pass it (argv[count+2], nFlag, hFlag)
           count = count + 3;
-  
+
         else if(nFlag)
         call the printOutput function and pass it (argv[count+1], nFlag, hFlag)
         count = count + 2;
@@ -69,6 +83,6 @@ int main(int argc, char**argv)
         count = count + 2;
 
       else
-  
-  return 0;      
-}     
+
+  return 0;
+}
