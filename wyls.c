@@ -49,18 +49,21 @@ int main(int argc, char **argv)
     //check to see if argv[2] exists
     if (argc > 2)
     {
-      if (strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "-n -h") == 0 ||
-          strcmp(argv[1], "-nh") == 0 || strcmp(argv[1], "-hn") == 0)
+      if (strcmp(argv[1], "-n") == 0)
       {
         nFlag = true;
         printf("nFlag: %d\n", nFlag);
       }
-
-      if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-h -n") == 0 ||
-          strcmp(argv[1], "-hn") == 0 || strcmp(argv[1], "-nh") == 0)
+      if (strcmp(argv[1], "-h") == 0)
       {
         hFlag = true;
         printf("hFlag: %d\n", hFlag);
+      }
+      if (strcmp(argv[1], "-nh") == 0 || strcmp(argv[1], "-hn") == 0)
+      {
+        nFlag = true;
+        hFlag = true;
+        printf("hFlag: %d  nFlag: %d\n", nFlag,hFlag);
       }
 
       if (!nFlag && !hFlag) //there's no option in position 1
@@ -72,29 +75,36 @@ int main(int argc, char **argv)
           count = count + 1;
        }
       }
-
-      else //check for an option in 2nd position
+       //only want this to evaluate the 2nd position if one of the flags is true
+       //since that would mean the first argument was an operator
+      if (nFlag || hFlag)
       {
-        if (strcmp(argv[2], "-n") == 0 || strcmp(argv[2], "-n -h") == 0 ||
-            strcmp(argv[2], "-nh") == 0 || strcmp(argv[2], "-hn") == 0)
+
+        if (strcmp(argv[2], "-n") == 0)
         {
           nFlag = true;
           printf("nFlag: %d\n", nFlag);
         }
-        if (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "-h -n") == 0 ||
-            strcmp(argv[2], "-hn") == 0 || strcmp(argv[2], "-nh") == 0)
+        if (strcmp(argv[2], "-h") == 0)
         {
           hFlag = true;
           printf("hFlag: %d\n", hFlag);
         }
+        if (strcmp(argv[2], "-nh") == 0 || strcmp(argv[2], "-hn") == 0)
+        {
+          nFlag = true;
+          hFlag = true;
+          printf("hFlag: %d  nFlag: %d\n", nFlag,hFlag);
+        }
       }
-
+/*
       if (nFlag && hFlag && argc == 3)
       {
         count = 3;
         printOutput(".",nFlag,hFlag);
       }
-      else if (hFlag && nFlag)
+*/
+      if (hFlag && nFlag)
       {
         count = 3;
         while (count < argc)
