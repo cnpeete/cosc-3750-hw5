@@ -76,10 +76,18 @@ int main(int argc, char **argv)
        }
       }
        //only want this to evaluate the 2nd position if one of the flags is true
-       //since that would mean the first argument was an operator
-      if (nFlag || hFlag)
+       //since that would mean the first argument was an option
+      if (nFlag && hFlag)
       {
-
+        count = 2;
+        while (count < argc)
+        {
+          printOutput(argv[count],nFlag,hFlag);
+          count ++;
+        }
+      }
+      else if (nFlag || hFlag)
+      {
         if (strcmp(argv[2], "-n") == 0)
         {
           nFlag = true;
@@ -95,16 +103,9 @@ int main(int argc, char **argv)
           nFlag = true;
           hFlag = true;
           printf("hFlag: %d  nFlag: %d\n", nFlag,hFlag);
-        }
+         }
       }
-/*
-      if (nFlag && hFlag && argc == 3)
-      {
-        count = 3;
-        printOutput(".",nFlag,hFlag);
-      }
-*/
-      if (hFlag && nFlag)
+      else if (hFlag && nFlag)
       {
         count = 3;
         while (count < argc)
